@@ -1,0 +1,162 @@
+/**
+* answer.txt
+*
+* @version   $Id: answer.txt,v_1.0 2014/09/28 23:12:00
+*
+* @author    ap8185 (Atir Petkar)
+* @author    hhk9433 (Hrishikesh Karale)
+*
+* Revisions:
+*      Initial revision
+*/
+
+
+public class  X {
+	static int x1 = 0;
+    int o1 = 1;
+
+    public X()    {
+        }
+    
+	static public void methodX1(int i){
+    	x1 = i;
+    	System.out.println("methodX1: " + x1 );
+    }
+    
+    public void methodX2(int i){
+    	x1 = i;
+        o1 = i;
+
+        /*
+          this keyword refers to the current class instance variable. In
+          this, we are printing the reference variable.In this,println calls
+          the java.io.PrintStream.print(Object) method, which then calls the
+          String.valueOf method. The String.valueOf method:
+         
+          public static String valueOf(Object obj) {
+          	return (obj == null) ? "null" : obj.toString();
+          }
+          
+          When println is called with a X object reference, the String.valueOf
+          method converts the object to a string. String.valueOf first checks 
+          to make sure that the reference is not null. It then calls the 
+          toString method for the object. Since the X class has no toString 
+          method, the default one in java.lang.Object is used instead.
+          The toString method is as follows.
+
+          public String toString() {  
+          	return getClass().getName() + "@" + Integer.toHexString(hashCode());  
+          }
+                 
+          The toString method actually return consists of the name of the class, 
+          an "@", and the hex version of the object's hashcode are concatenated           	         into a string and returned. The default hashCode method in Object is typically implemented by converting the memory address of the object                  		 into an integer.
+        */   
+             
+		System.out.println("methodX2: " + this);
+      	System.out.println("    x1 " + x1);
+       	System.out.println("    o1 " + o1);
+    }
+
+
+		In the main 2 objects of the class X is created and methodX1 and methodX2 is called on them.
+ 		aX.methodX1(1); --> makes aX.x1 = 1 and prints it
+ 		aaX.methodX1(2); --> makes aaX.x1 = 2 and prints it
+ 		aX.methodX2(3); --> makes aX.x1 = 3 and prints it
+ 		aaX.methodX2(4); --> makes aaX.x1 = 4 and prints it
+
+
+    public static void main(String args[] ){
+    	X aX = new X();
+        X aaX = new X();
+
+        aX.methodX1(1);
+        aaX.methodX1(2);
+
+        aX.methodX2(3);
+        aaX.methodX2(4);
+    }
+}
+
+
+
+Below class "XX" is a derived class of X, so it inherits all the methods and 
+variables of class X, alongwith its own method and variables.So from X we get 
+static int x1 and oI, methods x1 and x2 But since class XX has its own static 
+int x1 and int o1, the base class X variables gets hidden and also since the 
+same method methodX1 & methodX2 is defined again with same signature and same 
+return type in derived class XX, the methodX2 and methodX1 of base class is overridden.
+
+
+public class  XX extends X {
+	static int x1 = 0;
+    int o1 = 1;
+
+    public XX()    {
+    }
+
+    public void methodX2(int i){
+	    x1 = i;
+        o1 = i;
+        System.out.println("methodX2: " + this);
+        System.out.println("    x1 " + x1);
+        System.out.println("    o1 " + o1);
+    }
+
+    public static void main(String args[] )       {
+    	X aX = new X();
+        X aXX = new XX();
+
+        aX.methodX1(1);
+        aXX.methodX1(2);
+
+        aX.methodX2(3);
+        aXX.methodX2(4);
+        aX = (aXX);
+
+        aX.methodX2(3);
+        aX.methodX2(4);
+
+        }
+}
+
+
+
+
+In this program, a reference aX of class X is assigned first to an object of 
+class X itself.and another reference aXX of class X is assigned to an object 
+of derived class XX.Since the reference aXX refers to the subclass object and
+subclass method overrides the Parent class method, subclass method is invoked 
+at runtime.
+
+So in main,
+
+aX.methodX1(1); --> makes aX.x1 = 1 and prints it
+
+aXX.methodX1(2); --> methodX1 is inherited from class X and it  makes aX.x1 = 2
+					 and prints it
+
+aX.methodX2(3); -->  makes aX.x1 = 3 and aX.o1=3 and prints it. Also the object 
+					 class toString method is called which displays the string 
+					 "classname@hexcode" for the object.
+
+aXX.methodX2(4); --> Since aXX is a reference to derived class XX object,call to 
+					 overridden method "methodx2" is resolved at runtime rather 
+					 than compile-time. and hence it calls the derived class 
+					 methodX2() and prints x1 and o1 as 4.Also Since the reference
+					 is of type X, the className is displayed as X in "classname@hexcode".
+
+aX = (aXX); --> Since both the references are of type X, the statement is legal
+				 and aX now points to the object which is pointed by aXX.
+
+aX.methodX2(3); --> Since aX now points to derived class object, call to 
+					overridden method "methodx2" is resolved at runtime rather 
+					than compile-time.and hence it calls the derived class 
+					methodX2() and prints x1 and o1 as 3.Also Since the 
+					reference is of type X, the className is displayed as X 
+					in "classname@hexcode".Moreover the Hexcode will be same as 
+					for aXX because both are pointing to the same object
+
+aX.methodX2(4);-->  Since aX now points to derived class object, call to 
+					overridden method "methodx2" is resolved at runtime
+					rather than compile-time.
+and hence it calls the derived class methodX2() and prints x1 and o1 as 4.Also Since the reference is of type X, the className is displayed as X in "classname@hexcode".Moreover the Hexcode will be same as for aXX because both are pointing to the same object
